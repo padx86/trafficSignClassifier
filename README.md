@@ -1,6 +1,10 @@
-# Projekt 2 Traffic sign recognition
+# Project 2 Traffic sign recognition
 
-## Take a look at the data:
+## Take a close look at the data
+Assuming the all features have the correct labels we will take a close look at the distribution at first
+
+### Data distribution
+The first step will be to look at the total number of labels for the training samples(n train samples), the validation samples(n valid samples) and test samples(n test samples) for each Label(Label No.). In addition the Ratio of samples for training, validation and test are calculated to the total number of samples(n train + n valid + n test) for each label. The results are displayed in the following table:
 
 |Label No. | n train samples | n valid samples | n test samples | ratio train | ratio valid | ratio test|
 |----------|-----------------|-----------------|----------------|-------------|-------------|-----------|
@@ -47,3 +51,47 @@
 |40|0300|0060|0090|0.67|0.13|0.20|
 |41|0210|0030|0060|0.70|0.10|0.20|
 |42|0210|0030|0090|0.64|0.09|0.27|
+
+The first conclusion is that the number of samples varies for each label. For example label no. 0 has a total of 180 training samples whereas label no. 1 has a total of 1980 training samples being 11 times higher. This could result in an overfitting on certain labels and underfitting on others.
+The second conclusion is that there is a small range of ratios for each label regarding the split of training(0.63-0.70), validation(0.08-0.14) and test(0.20-0.27) labels. Some kind of fixed ratio might be more successful for training, validating and testing the convnet.
+
+### Conclusion on data analysis
+
+It might make sense to train the network evenly on all labels by choosing a random set of each label roughly the same size for each batch.
+
+## Implementing the Network
+
+For learning purposes a new class was built called tfclassify. Own methods were implemented to add specific layers like Convolutional Layers and Fully connected layers as well as methods to add activation and Pooling possibilities.
+Also routines for created for testing and prediction
+
+## Network selection & Training
+
+As unexperienced nn-developer I went for a trial&error approach. In the P2_full jupyter notebook(P2_full.html) shows multiple variations on the network architecture and training including different learning rates, decaying learning rates, epochs, training with even samples per label and additional layers to retrieve better performance on the nn. The saved training data can be found in the directory ./modeldata/models_from_P2_full_notebook. To enhance training performance g2.2xlarge instance of amazon web services was in use.
+Finally a network with an additional convolutional layer with relu activation and pooling was chosen achieving validation performance beyond 93%. Using the test samples to test the network resulting in exactly 93% accuracy. The nn setup can be viewed in P2_V1 or P2_full[at the end] jupyter notebooks (P2_V1.html):
+--------------------------------------------------
+Convolutional Layer as Layer 1 with input dimensions (32, 32, 3) and output dimensions (28.0, 28.0, 7)
+Activation on Layer 1 with type relu
+Pooling on Layer 1 with input dimensions (28.0, 28.0, 7) and output dimensions (26.0, 26.0, 7)
+Convolutional Layer as Layer 2 with input dimensions (26.0, 26.0, 7) and output dimensions (24.0, 24.0, 9)
+Activation on Layer 2 with type relu
+Pooling on Layer 2 with input dimensions (24.0, 24.0, 9) and output dimensions (12.0, 12.0, 9)
+Convolutional Layer as Layer 3 with input dimensions (12.0, 12.0, 9) and output dimensions (10.0, 10.0, 16)
+Activation on Layer 3 with type relu
+Pooling on Layer 3 with input dimensions (10.0, 10.0, 16) and output dimensions (5.0, 5.0, 16)
+Fully Connected Layer as Layer 4 with input dimensions (5.0, 5.0, 16) and output dimensions (120, 1, 1)
+Activation on Layer 4 with type relu
+Fully Connected Layer as Layer 5 with input dimensions (120, 1, 1) and output dimensions (84, 1, 1)
+Activation on Layer 5 with type relu
+Fully Connected Layer as Layer 6 with input dimensions (84, 1, 1) and output dimensions (43, 1, 1)
+--------------------------------------------------
+The training was setup with training rate of 0.0009, a batch size of 128 and 50 epochs
+
+## Traffic sign prediction on self-selected images
+
+5 signs were selected from the internet and reshaped t0 32x32 pixels. Then the images were fed to the network adding softmax and argmax to return probabilities and the exact prediction.
+All signs except for one were identified correctly giving an accuracy of 80%.
+The sign identified incorrectly was the speed limit sign of 70km/h which was predicted as 60km/h. 
+
+## Conclusion
+
+Surely a more effective nn architecture could be found to raise the accuracy. Also better training rates, number of epochs for training, more suitable image preparation as well as regularization methods like L2 or dropout (not used in this project submission) can be chosen. Regarding the accuracy of the predicting image content a convolutional network seems to be an ´easy´ and efficient way to classify visual data, if there is eneugh information to trian the network.
