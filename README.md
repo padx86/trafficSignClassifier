@@ -68,7 +68,7 @@ Also routines for created for testing and prediction
 
 As unexperienced nn-developer I went for a trial&error approach. In the P2_full jupyter notebook(P2_full.html) shows multiple variations on the network architecture and training including different learning rates, decaying learning rates, epochs, training with even samples per label and additional layers to retrieve better performance on the nn. The saved training data can be found in the directory ./modeldata/models_from_P2_full_notebook. To enhance training performance g2.2xlarge instance of amazon web services was in use.
 Finally a network with an additional convolutional layer with relu activation and pooling was chosen achieving validation performance beyond 93%. Using the test samples to test the network resulting in exactly 93% accuracy. The nn setup can be viewed in P2_V1 or P2_full[at the end] jupyter notebooks (P2_V1.html):
---------------------------------------------------
+```
 Convolutional Layer as Layer 1 with input dimensions (32, 32, 3) and output dimensions (28.0, 28.0, 7)
 Activation on Layer 1 with type relu
 Pooling on Layer 1 with input dimensions (28.0, 28.0, 7) and output dimensions (26.0, 26.0, 7)
@@ -83,7 +83,7 @@ Activation on Layer 4 with type relu
 Fully Connected Layer as Layer 5 with input dimensions (120, 1, 1) and output dimensions (84, 1, 1)
 Activation on Layer 5 with type relu
 Fully Connected Layer as Layer 6 with input dimensions (84, 1, 1) and output dimensions (43, 1, 1)
---------------------------------------------------
+```
 The training was setup with training rate of 0.0009, a batch size of 128 and 50 epochs
 
 ## Traffic sign prediction on self-selected images
